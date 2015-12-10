@@ -47,7 +47,7 @@ public class SuperArray {
     //double capacity of this SuperArray
     private void expand()
     {
-    int[] temp = new int[ _data.length * 2 ];
+    Comparable[] temp = new Comparable[ _data.length * 2 ];
     for( int i = 0; i < _data.length; i++ )
         temp[i] = _data[i];
     _data = temp;
@@ -55,14 +55,14 @@ public class SuperArray {
 
        
     //accessor -- return value at specified index
-    public int get( int index ) { return _data[index]; }
+    public Comparable get( int index ) { return _data[index]; }
 
        
     //mutator -- set value at index to newVal,
     //           return old value at index
-    public int set( int index, int newVal )
+    public Comparable set( int index, Comparable newVal )
     {
-     int temp = _data[index]; //preserves old value
+     Comparable temp = _data[index]; //preserves old value
     _data[index] = newVal;
     return temp; //returns old value
     }
@@ -70,7 +70,7 @@ public class SuperArray {
 
     // ~~~~~~~~~~~~~~ PHASE II ~~~~~~~~~~~~~~
     //adds an item after the last item
-    public void add( int newVal ) {
+    public void add( Comparable newVal ) {
     if (_size >= _data.length) { //if array is full
         expand();
     }
@@ -81,14 +81,14 @@ public class SuperArray {
    
     //inserts an item at index
     //shifts existing elements to the right
-    public void add( int index, int newVal ) {
+    public void add( int index, Comparable newVal ) {
     if( index <= _lastPos ){ //does not add if index of new value is past _lastPos
 
         if( _lastPos >= _data.length - 1 ) { //if array is almost filled up
             expand();
         }
 
-       int temp = set( index, newVal ); //holds last val
+       Comparable temp = set( index, newVal ); //holds last val
 
        for(int i = index + 1; i <= _lastPos + 1; i++){//also increments _lastPos
           temp = set(i, temp); //temp is redefined after the right side is done
@@ -104,7 +104,7 @@ public class SuperArray {
     //shifts elements left to fill in newly-empted slot
     public void remove( int index ) {
        
-    int temp = set( _lastPos, 0 ); //holds last val
+    Comparable temp = set( _lastPos, null ); //holds last val
 
     for (int i = --_lastPos; i >= index; i--){ //also decrements _lastPos
         temp = set(i, temp); //temp is redefined after the right side is done
@@ -120,10 +120,78 @@ public class SuperArray {
         return _size;
     }
 
- 
+    public int linSearch( Comparable target ) {
+      for( int i = 0; i < _size; i++ )
+       {
+          //System.out.println( _data[i] + "\n");
+          //System.out.println( i );
+
+         if ( _data[i].getClass() == target.getClass() ) { //same class?
+            if( _data[i].compareTo(target) == 0 ) {
+              return i; //once it finds the first element, returns index
+            }
+         }
+       }
+        return -1; //if none found
+    }
+
+    public boolean isSorted() {
+      int i = 0; //to go through the array
+
+      for(; i < _size - 1; ++i ) {
+        double val = helpSort( _data[i] );
+        double vlr = helpSort( _data[i + 1] );
+
+        //System.out.println( val );
+
+        if( val > vlr ) {//if the next value is less
+          return false;
+        }
+        }
+
+      return true;
+    }
+
+    public double helpSort( Comparable c ) {
+      if ( c instanceof Rational ) { //if it's a rational
+        Rational r = ( Rational ) c;
+        return r.floatValue();
+      }
+
+      if ( c instanceof Binary ) {//binary
+        Binary b = ( Binary ) c;
+        return Binary.binToDec( b + "" );
+      }
+
+      if ( c instanceof Hexadecimal ) {//hex
+        Hexadecimal h = ( Hexadecimal ) c;
+        return Hexadecimal.hexToDec( h + "" );
+      }
+
+      throw new ClassCastException ( "\n_data contains a wrong variable type :(");
+    }
+
     //main method for testing
     public static void main( String[] args )
     {
+      SuperArray johnCena = new SuperArray();
+
+      for( int i = 0; i < 10; ++i ) {
+        //System.out.println( i );
+
+        if( i < 3 ) {
+          johnCena.add( new Rational( i, i + 1 ) );
+        }
+        else if( i < 7 ) {
+          johnCena.add( new Binary( i ) );
+        }
+        else {
+          johnCena.add( new Hexadecimal( i%2 ) );
+        }
+      }
+
+      System.out.println( johnCena.linSearch( new Binary( 4 ) ) );//4
+      System.out.println( johnCena.isSorted() ); //false
 
     /*
     SuperArray curtis = new SuperArray();
