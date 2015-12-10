@@ -109,19 +109,20 @@ public class Rational implements Comparable{
 	
 	public int compareTo( Object o ) { //implementing interface
 	if (this == o) { //if same alias
-	    return true;
+	    return 0;
 	}
 
 	if ( o == null ) {
 		throw new NullPointerException( "\ncompareTo() input is a null :(" );	
 	}	
 
-	if (!(obj instanceof Rational)) {
+	if (!(o instanceof Rational)) {
 		throw new ClassCastException ( "\ncompareTo() input is not a Rational :(");
     	}
-	    Rational rightSide = (Rational)obj; //if it is a Rational
+	    Rational rightSide = (Rational)o; //if it is a Rational
 	    this.reduce();//both reduce
 	    rightSide.reduce();
+
 	if( numerator == rightSide.numerator && //returns 0 if both numerator and denominator are the same
 		denominator == rightSide.denominator) {
 	    return 0;
