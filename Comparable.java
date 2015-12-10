@@ -7,5 +7,5 @@ HW45 -- Come Together
 
 public interface Comparable
 {
-    int compareTo(Object o);
+    int compareTo(Object o);//all Comparables have this
 }
